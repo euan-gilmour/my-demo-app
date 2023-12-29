@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>VC Protocol Demo</title>
+  <script defer src="index.js"></script>
+  <link rel="stylesheet" href="my-demo.css" />
+</head>
+
+<body>
+  <header>
+    <h2>Demo</h2>
+  </header>
+  <div id="requests" class="panel">
+    <div class="row">
+      <label>Send Requests</label>
+      <input id="searchBar" name="searchBar" type="text" value="http://localhost:3000/my-pod/test-folder/test-resource.txt"></input>
+      <button id="getBtn" name="getBtn" type="btn">GET</button>
+    </div>
+    <div class="row">
+      <div>
+        <textarea id="responseArea" name="responseArea" rows="5" cols="42" disabled></textarea>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
