@@ -3,8 +3,8 @@ h2,h3 {
 }
 
 body * {
-   margin-left: .5rem;
-   margin-right: 1rem;
+   /* margin-left: .5rem;
+   margin-right: 1rem; */
 }
 
 header {
@@ -55,4 +55,25 @@ dt {
 
 dd {
   grid-column-start: 2;
+}
+
+#requests{
+   width: 500px;
+   height: auto;
+}
+
+#searchBar{
+   width: 100%;
+   height: auto;
+}
+
+#searchDiv{
+   width:100%;
+   height: auto;
+   display:flex;
+}
+
+#responseArea{
+   width: 100%;
+   height: auto;
 }

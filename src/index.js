@@ -158,8 +158,12 @@ async function VcBasedrequests(){
 
 
   let resource = await requestWithVP(nonce, domain, url);
-  console.log(resource)
-  responseArea.innerHTML = resource;
+
+  //wait 5 secs before updating the display
+  console.log(resource);
+  window.setTimeout(()=>{
+    responseArea.innerHTML = resource;
+  }, 5000);
 }
 
 async function requestWithVP(nonce, domain, url){
