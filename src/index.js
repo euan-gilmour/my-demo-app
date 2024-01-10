@@ -91,38 +91,8 @@ getBtn.onclick = function () {
   issuer = 'did:web:issuer123.solidcommunity.net';
 
   VcBasedrequests(); //follows protocol. Initial request with VC headers, then request with VP
-  //request2(); //test request to look at responses in oidc flow
-  //testRequest(); //just a GET request with no attempt to authenticate
 };
 
-async function testRequest(){
-  console.log('Try get resource with no prior authentication');
-  let url = searchBar.value;
-  let response = await fetch(url, {
-    method: "GET"
-  });
-
-  let result = await response.text();
-  console.log(result);
-  console.log(response);
-  responseArea.innerHTML = result;
-}
-
-async function request2(){
-  console.log('1 - Discover Authorisation Server');
-  //??
-  console.log('2 - Request AS configuration')
-  //http://localhost:3000/.well-known/openid-configuration
-  let url = searchBar.value;
-  let response = await fetch(url, {
-    method: "GET"
-  });
-
-  let result = await response.json();
-  console.log(result);
-  console.log(response);
-  responseArea.innerHTML = JSON.stringify(result);
-}
 //---------------------------------------------------------------------------------------
 async function VcBasedrequests(){
   console.log("Sending first request for the resource...");
@@ -177,7 +147,6 @@ async function requestWithVP(nonce, domain, url){
     let msg = {
       method: "GET",
       headers: {
-        //'Authorization': 'VP',
         'vp': vpJwt,
         }
       }
