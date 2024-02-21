@@ -60,6 +60,7 @@ async function VcBasedrequests(){
     }
     //send request to User to acquire VP (after 5 secs)
     window.setTimeout(()=>{
+      alert('Redirecting to User to get VP...');
       getVP(nonce, domain);
     }, 1000);
   }
