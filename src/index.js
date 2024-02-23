@@ -4,9 +4,8 @@ const responseArea = document.querySelector('#responseArea');
 let appName;
 let user;
 let issuer;
-let trusted_uri ='http://localhost:8081';
 
-//VP may be in the url parameters after redirecting from User to App
+//VP may be in the URL parameters after redirecting from User to App
 let params = new URLSearchParams(location.search);
 
 getBtn.onclick = function () {
@@ -14,28 +13,27 @@ getBtn.onclick = function () {
   user = 'did:web:ben3101.solidcommunity.net';
   issuer = 'did:web:issuer123.solidcommunity.net';
 
-  VcBasedrequests(); //Follows protocol. Initial request with VC headers, then request with VP
+  //Send requests following protocol
+  VcBasedrequests(); 
 };
 
-//---------------------------------------------------------------------------------------
 async function VcBasedrequests(){
   let url = searchBar.value;
-  //if we have a VP and just arrived from a redirect, use it to send a request for the resource
+  //If we have a VP and just arrived from a redirect, use it to send a request for the resource from CSS server
   if(params.get("vp")){
     let VP = params.get("vp");
     console.log('Sending request for the resource with a VP...');
     let resource = await requestWithVP(url, VP);
-    //wait 5 secs before updating the display
     console.log(resource);
     responseArea.innerHTML = resource;
-  //otherwise, send first request and follow protocol to acquire VP
+  //Otherwise, send first request and follow protocol to acquire VP
   }else{
     console.log("Sending first request for the resource...");
-    //message containing the app, issuer and user, requesting the resource at the url entered in the input box
+    //Message containing the app, issuer and user, requesting the resource at the url entered in the input box
     let response = await fetch(url, {
       method: "POST",
       headers: {
-        'vc': 'true'//so the server's VcHttpHandler component handles it
+        'vc': 'true'//So the server's VcHttpHandler component handles it
       },
       body: JSON.stringify({
         'user': user,
@@ -58,7 +56,7 @@ async function VcBasedrequests(){
       console.log("No nonce or domain received in response");
       return;
     }
-    //send request to User to acquire VP (after 5 secs)
+    //Send request to User to acquire VP (after 1 second delay)
     window.setTimeout(()=>{
       alert('Redirecting to User to get VP...');
       getVP(nonce, domain);
@@ -66,8 +64,8 @@ async function VcBasedrequests(){
   }
 }
 
-//sends request to User app and asks for a VP
-//gets redirected to User HTML page and should return to App with VP
+//Sends request to User app and ask for a VP
+//Gets redirected to User HTML page and should return to App with VP
 async function getVP(nonce, domain){
   console.log("Sending request to the User app...");
   let url = 'http://localhost:8081/vprequest';
@@ -87,10 +85,10 @@ async function getVP(nonce, domain){
       redirect_uri: window.location.href
     })
   });
-  if(response.url.substring(0,trusted_uri.length) === trusted_uri){
+  if(response.url !== undefined){
     window.location = response.url;
   }else{
-    console.log('Redirect URI not recognised.');
+    console.log('Redirect URI not included in response.');
     return;
   }
 }
