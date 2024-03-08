@@ -15,6 +15,8 @@ getBtn.onclick = function () {
 
   //Send requests following protocol
   VcBasedrequests(); 
+  //Send requests following protocol - without user input and measure average time taken
+  //speedTests(100);
 };
 
 async function VcBasedrequests(){
@@ -43,7 +45,6 @@ async function VcBasedrequests(){
     });
     let result = await response.json();
     console.log(result);
-    console.log(response);
     responseArea.innerHTML = JSON.stringify(result);
     let VPrequest = result;
 
@@ -98,10 +99,88 @@ async function requestWithVP(url, vpJwt){
       method: "GET",
       headers: {
         'vp': vpJwt,
+        'Cache-Control': 'no-cache'
         }
       }
     let response2 = await fetch(url, msg);
     console.log(`Sent second request: ${JSON.stringify(msg)}`);
-    let res = response2.text();
+    let res = await response2.text();
     return res;    
+}
+
+//full protocol from start to finish
+async function speedTest(){
+  let startTime = performance.now();
+  //console.log(`Start Time: ${startTime}`);
+
+  let url = searchBar.value;
+  //Send first request and follow protocol to acquire VP
+  //console.log("Sending first request for the resource...");
+  //Message containing the app, issuer and user, requesting the resource at the url entered in the input box
+  let response = await fetch(url, {
+      method: "POST",
+      headers: {
+        'vc': 'true'//So the server's VcHttpHandler component handles it
+      },
+      body: JSON.stringify({
+        'user': user,
+        'app': appName,
+        'vcissuer': issuer,
+      })
+    });
+    let result = await response.json();
+    responseArea.innerHTML = JSON.stringify(result);
+    let VPrequest = result;
+    let nonce = undefined;
+    let domain = undefined;
+    try{
+      nonce = VPrequest.VerifiablePresentation.challenge;
+      domain = VPrequest.VerifiablePresentation.domain;
+    }catch(e){
+      console.log("No nonce or domain received in response");
+      return;
+    }
+    //Send request to User to acquire VP
+  console.log("Sending request to the User app...");
+  let uri = 'http://localhost:8081/vprequest_speed_test';
+  let res = await fetch(uri, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+    body: JSON.stringify({
+      user: user,
+      application: appName,
+      vcissuer: issuer,
+      nonce: nonce,
+      domain: domain,
+    })
+  });
+
+    //Request resource with VP
+    let VP = await res.text();
+    //console.log(VP);
+    //console.log('Sending request for the resource with a VP...');
+    let resource = await requestWithVP(url, VP);
+    //console.log(resource);
+    responseArea.innerHTML = resource;
+    let endTime = performance.now();
+    //console.log(`End Time: ${endTime}`);
+    let timeTaken = endTime - startTime;
+    //console.log(`Time Taken: ${timeTaken} milliseconds`);
+    return timeTaken;
+}
+
+async function speedTests(sampleSize){
+  console.log(`Sending ${sampleSize} requests using VC-based protocol...`)
+  let i = 1;
+  let totalTime = 0;
+  while(i<=sampleSize){
+    console.log(`Request ${i}:`);
+    totalTime += await speedTest();
+    i++;
+  }
+  let averageTime = totalTime / sampleSize;
+  console.log(`Average Time: ${averageTime}`);
 }
