@@ -16,7 +16,7 @@ getBtn.onclick = function () {
   //Send requests following protocol
   VcBasedrequests(); 
   //Send requests following protocol - without user input and measure average time taken
-  //speedTests(100);
+  //speedTests(500);
 };
 
 async function VcBasedrequests(){
