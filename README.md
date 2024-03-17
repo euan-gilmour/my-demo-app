@@ -1,7 +1,8 @@
-##Description
+## Description
+
 This application provides an interface for interacting with a [modified version](https://github.com/ben3101/CommunitySolidServer) of the Community Solid Server using a VC-based protocol. It should be run alongside ['my-demo-app-user'](https://github.com/ben3101/my-demo-app-user). For demonstration purposes, entities for the user and issuer in the protocol have been hardcoded.
 
-##Starting the app
+## Starting the app
 
 1. Install dev dependencies with the command:
    `npm i`
