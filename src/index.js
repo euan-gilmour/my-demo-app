@@ -4,6 +4,7 @@ const searchBar = document.querySelector('#searchBar');
 const getBtn = document.querySelector('#getBtn');
 const responseArea = document.querySelector('#responseArea');
 const qrCanvas = document.querySelector('#qrCanvas');
+const ipAddressField = document.querySelector('#ipAddressField');
 const appName = "my-demo-app";
 const user = "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:user";
 const issuer = "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:issuer";
@@ -56,13 +57,15 @@ async function initialVcRequest() {
 }
 
 function generateVpRequestAsQr(nonce, domain) {
+  const localIp = ipAddressField.value;
+
   const vpRequest = {
     user: user,
     application: appName,
     vcissuer: issuer,
     nonce: nonce,
     domain: domain,
-    signallingChannel: `ws://${window.location.hostname}:${window.location.port}/`
+    signallingChannel: `ws://${localIp}:8081/`
   };
 
   console.log(vpRequest);
