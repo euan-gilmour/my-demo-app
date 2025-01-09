@@ -1,23 +1,80 @@
+let QRCode = require('qrcode');
+
 const searchBar = document.querySelector('#searchBar');
 const getBtn = document.querySelector('#getBtn');
 const responseArea = document.querySelector('#responseArea');
-let appName;
-let user;
-let issuer;
+const qrCanvas = document.querySelector('#qrCanvas');
+const appName = "my-demo-app";
+const user = "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:user";
+const issuer = "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:issuer";
 
 //VP may be in the URL parameters after redirecting from User to App
 let params = new URLSearchParams(location.search);
 
 getBtn.onclick = function () {
-  appName = "my-demo-app";
-  user = 'did:web:ben3101.solidcommunity.net';
-  issuer = 'did:web:issuer123.solidcommunity.net';
+  // Send initial request to the server
+  initialVcRequest();
 
   //Send requests following protocol
-  VcBasedrequests(); 
+  // VcBasedrequests(); 
   //Send requests following protocol - without user input and measure average time taken
   //speedTests(500);
 };
+
+async function initialVcRequest() {
+  let url = searchBar.value;
+
+  console.log("Sending first request for the resource...")
+  let response = await fetch(url, {
+    method: "POST",
+    headers: {
+      'vc': 'true'//So the server's VcHttpHandler component handles it
+    },
+    body: JSON.stringify({
+      'user': user,
+      'app': appName,
+      'vcissuer': issuer,
+    })
+  });
+  let result = await response.json();
+  console.log(result)
+
+  responseArea.innerHTML = JSON.stringify(result);
+  let VPrequest = result;
+
+  let nonce = undefined;
+  let domain = undefined;
+  try{
+    nonce = VPrequest.VerifiablePresentation.challenge;
+    domain = VPrequest.VerifiablePresentation.domain;
+  }catch(e){
+    console.log("No nonce or domain received in response");
+    return;
+  }
+
+  generateVpRequestAsQr(nonce, domain)
+}
+
+function generateVpRequestAsQr(nonce, domain) {
+  const vpRequest = {
+    user: user,
+    application: appName,
+    vcissuer: issuer,
+    nonce: nonce,
+    domain: domain,
+    signallingChannel: `ws://${window.location.hostname}:${window.location.port}/`
+  };
+
+  console.log(vpRequest);
+
+  vpRequestString = JSON.stringify(vpRequest);
+
+  // Create the QR code
+  QRCode.toCanvas(qrCanvas, vpRequestString, (err) => {
+    if (err) console.log(err);
+    else console.log("QR Code Successful");
+  });
+}
 
 async function VcBasedrequests(){
   let url = searchBar.value;
