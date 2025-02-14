@@ -33,9 +33,11 @@ module.exports = {
         ws.on("message", (message) => {
           console.log(`Received message: ${message}`);
 
+          const messageString = message.toString()
+
           webSocketsServer.clients.forEach((client) => {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send(message);
+              client.send(messageString);
             }
           });
         });
