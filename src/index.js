@@ -5,11 +5,12 @@ const getBtn = document.querySelector("#getBtn");
 const responseArea = document.querySelector("#responseArea");
 const qrCanvas = document.querySelector("#qrCanvas");
 const ipAddressField = document.querySelector("#ipAddressField");
+const userDidField = document.querySelector("#userDidField");
 const appName = "my-demo-app";
-const user = "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:user";
 const issuer =
   "did:web:raw.githubusercontent.com:euan-gilmour:dids:main:issuer";
 let url;
+let user;
 
 getBtn.onclick = function () {
   initialVcRequest();
@@ -17,6 +18,7 @@ getBtn.onclick = function () {
 
 async function initialVcRequest() {
   url = searchBar.value;
+  user = userDidField.value;
 
   console.log("Sending first request for the resource...");
   let response = await fetch(url, {
