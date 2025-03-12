@@ -14,24 +14,28 @@
   </header>
   <p>This app can be used to send requests to the CSS server.
   </p>
-  <div id="requests" class="panel">
-    <div class="row">
-      <label>Send Requests</label>
-      <div id="searchDiv">
-        <input id="searchBar" name="searchBar" type="text" value="http://localhost:3000/my-pod/test-folder/test-resource.txt"></input>
-        <button id="getBtn" name="getBtn" type="btn">GET</button>
+  <div id="panels">
+    <div id="requests" class="panel">
+      <div class="row">
+        <label>Send Requests</label>
+        <div id="searchDiv">
+          <input id="searchBar" name="searchBar" type="text" value="http://localhost:3000/my-pod/test-folder/test-resource.txt"></input>
+          <button id="getBtn" name="getBtn" type="btn">GET</button>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <textarea id="responseArea" name="responseArea" rows="15" cols="42" disabled></textarea>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div>
-        <textarea id="responseArea" name="responseArea" rows="15" cols="42" disabled></textarea>
+    <div class="panel">
+      <label>Scan Here</label>
+      <div class="row">
+        <canvas id="qrCanvas"></canvas>
       </div>
-    </div>
-    <div class="row">
-      <canvas id="qrCanvas"></canvas>
     </div>
   </div>
-  <br><br><br><br><br><br><br><br>
   <label for="userDidField">Enter your DID:</label>
   <input type="text" id="userDidField" placeholder="did:web:example.com">
   <br>

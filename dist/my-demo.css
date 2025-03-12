@@ -11,6 +11,10 @@ header {
    padding-left: .5rem;
 }
 
+#panels {
+   display: flex;
+}
+
 .panel {
    border: 1px solid #005b81;
    border-radius: 4px;
