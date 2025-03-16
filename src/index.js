@@ -77,6 +77,11 @@ function generateVpRequestAsQr(nonce, domain) {
 
 function setupWebSocket() {
   const ws = new WebSocket("ws://localhost:8081/");
+
+  getBtn.addEventListener("click", () => {
+    ws.close();
+  });
+
   window.addEventListener("beforeunload", () => {
     ws.close();
     peerConnection.close();
@@ -93,6 +98,7 @@ function setupWebSocket() {
     switch (message.type) {
       case "VP":
         sendRequestWithVP(message.vp);
+        ws.close();
     }
   };
 }
